@@ -1,0 +1,53 @@
+<!-- meeting list -->
+<div data-role="page" id="meetings">
+    <div data-theme="d" data-role="header">
+        <h3>
+            Onmyway
+        </h3>
+    </div>
+    <div data-role="content">
+        <ul data-role="listview" data-divider-theme="d" data-inset="true" id="meeting-list">
+            <li data-role="list-divider" role="heading">
+                Received Meetings
+            </li>
+        </ul>
+
+        <ul data-role="listview" data-divider-theme="d" data-inset="true" id="history">
+            <li data-role="list-divider" role="heading">
+                History
+            </li>
+        </ul>
+
+        <a data-role="button" href="/meetings/new" data-icon="arrow-r" data-iconpos="right" id="newmeeting">
+            Say on my way!
+        </a>
+    </div>
+    <script>
+
+    var tmpl_meeting_item = _.template('<li data-theme="d" class="meeting-item"><a href="/{{salt}}" data-transition="slide"><img src="http://graph.facebook.com/{{sender_id}}/picture?width=150&height=150" style="width:75px;height:75px;">&nbsp;{{initiator.name}}</a></li>');
+    var tmpl_meeting_history = _.template('<li data-theme="d" class="meeting-item"><img src="http://graph.facebook.com/{{sender_id}}/picture?width=150&height=150" style="width:75px;height:75px;"><h2>{{initiator.name}}</h2><p>{{updated_at}}</p></li>');
+
+    $.get("/meetings/pending", function(meetings) {
+      if (meetings.length == 0) {
+          $("#meeting-list").append('<li class="no-item" data-theme="d">None of your friends wants to meet you.</li>');
+      } else {
+        _.each(meetings, function(meeting) {
+          $("#meeting-list").append(tmpl_meeting_item(meeting));
+        });
+      }
+      $("#meeting-list").listview('refresh');
+    });
+
+    $.get("/meetings/history", function(meetings) {
+      if (meetings.length == 0) {
+          $("#history").append('<li class="no-item" data-theme="d">No history</li>');
+      } else {
+        _.each(meetings, function(meeting) {
+          var d = new Date(Date.parse(meeting.updated_at));
+          $("#history").append(tmpl_meeting_history(_.extend(meeting, {updated_at: d.getFullYear() + "." + (d.getMonth()+1) + "." + d.getDate()})));
+        });
+      }
+      $("#history").listview('refresh');
+    });
+    </script>
+</div>

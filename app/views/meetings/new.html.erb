@@ -1,0 +1,60 @@
+<!-- new meeting page -->
+<div data-role="page" id="new-meeting">
+    <div data-theme="d" data-role="header">
+        <h3>
+            Select friend
+        </h3>
+    </div>
+    <div data-role="content">
+      <ul data-role="listview" data-filter="true" id="friends">
+      </ul>
+    </div>
+
+  <script>
+var tmpl_friend_item = _.template('<li><a href="#" onclick="send_message(\'{{id}}\', \'{{name}}\')"><img src="http://graph.facebook.com/{{ id }}/picture?width=150&height=150"> {{ name }}</a></li>');
+
+  function send_message(fbid, name) {
+    var salt = "<%= @my_fb_id %>" + "_" + fbid +"_" + Math.round(new Date().getTime()/1000);
+    FB.ui({
+      method: 'feed',
+      link: "http://onmyway.dev/" + salt,
+      picture: 'http://onmyway.dev/assets/friends.png',
+      name: "I'm on my way",
+      description: "I'm now going to " + name + ". See you soon", 
+      to: fbid
+    }, function(response){
+      if (response) {
+        var postid = response.post_id;
+
+        $.post("/meetings", {invitee_id: fbid, post_id: postid, salt: salt}, function(response) {
+          console.log(response);
+        });
+      }
+    });
+    return false;
+  }
+
+  function load_friends() {
+    console.log("load_friends");
+    FB.api("me/friends", function(response) { 
+      if (response.error && response.error.code == 2500) {
+        FB.login(function(response) {
+          if (response.authResponse) {
+            load_friends();
+          }
+        });
+      } else {
+        console.log(response);
+        _.each(response.data, function(friend, index) {
+          $("#friends").append(tmpl_friend_item(friend));
+        });
+        $("#friends").listview('refresh');
+      }
+    });
+  }
+
+  console.log("hi?");
+  load_friends();
+  </script>
+</div>
+

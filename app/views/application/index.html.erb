@@ -1,0 +1,34 @@
+<!-- Home -->
+<div data-role="page" id="home">
+    <div data-theme="d" data-role="header">
+        <h3>
+            Onmyway
+        </h3>
+    </div>
+    <div data-role="content">
+        <h4>
+            Tell your friend you will be there.
+        </h4>
+        <div style="width: 288px; height: 350px; position: relative; background-color: #fbfbfb; border: 1px solid #b8b8b8;">
+            <img src="http://sd.keepcalm-o-matic.co.uk/i/keep-calm-and-hangout-with-friends-1.png" alt="image" style="width:100%">
+        </div>
+
+        <a data-role="button" href="#" data-icon="arrow-r" data-iconpos="right" id="facebook">
+            Facebook
+        </a>
+    </div>
+</div>
+
+<script>
+$("#facebook").click(function(){
+  FB.login(function(response) {
+    if (response.authResponse) {
+      $.getJSON("<%= auth_facebook_callback_path %>?" + $.param({ signed_request: response.authResponse.signedRequest }), function(user) {
+
+        console.log("hello");
+        $.mobile.changePage("<%= meetings_path %>");
+      });
+    }
+  });
+});
+</script>

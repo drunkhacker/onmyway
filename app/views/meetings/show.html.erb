@@ -1,0 +1,50 @@
+<!-- meeting show -->
+<div data-role="page" id="meetings">
+    <div data-theme="d" data-role="header">
+        <h3 id="title">
+          wants to meet you.
+        </h3>
+    </div>
+    <div data-role="content">
+        <div style="width: 150px; height: 150px; position: relative; background-color: #fbfbfb; border: 1px solid #b8b8b8;">
+            <img id="friend-picture" src="http://graph.facebook.com/<%= @meeting.sender_id %>/picture?width=150&height=150" alt="image">
+        </div>
+
+        <% if @meeting.status == Meeting::STATUS_PENDING -%> 
+          <a data-role="button" data-icon="arrow-r" data-iconpos="right" id="confirm">
+            This friend is now with me!
+          </a>
+        <% else -%>
+          <h3>You were with this friend <%= time_ago_in_words(@meeting.updated_at) %> ago.</h3>
+        <% end -%>
+
+    </div>
+</div>
+
+<script>
+$("#confirm").click(function() {
+  //get current location
+  navigator.geolocation.getCurrentPosition(function(pos) {
+    var lat = pos.coords.latitude;
+    var lng = pos.coords.longitude;
+    $.post("/meetings/<%= @meeting.id %>/confirm", {latitude: lat, longitude: lng}, function(response) {
+      if (!response.error) {
+        $.mobile.changePage("/");
+      } else {
+        console.error(response.error);
+      }
+    }); 
+  }, function(error) {
+    //send confirmation anyway
+    $.post("/meetings/<%= @meeting.id %>/confirm", function(response) {
+      if (!response.error) {
+        $.mobile.changePage("/");
+      } else {
+        console.error(response.error);
+      }
+    }); 
+
+    console.dir(error);
+  });
+});
+</script>
