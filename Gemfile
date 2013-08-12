@@ -51,3 +51,5 @@ gem "omniauth-facebook", "1.4.0"
 gem "redis"
 gem "redis_session_store", "~> 0.1"
 
+gem 'rvm-capistrano'
+
