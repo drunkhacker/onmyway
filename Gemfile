@@ -52,4 +52,7 @@ gem "redis"
 gem "redis_session_store", "~> 0.1"
 
 gem 'rvm-capistrano'
+gem 'therubyracer'
+gem 'less-rails-bootstrap'
 
+gem 'haml'

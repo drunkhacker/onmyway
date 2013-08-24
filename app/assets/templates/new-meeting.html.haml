@@ -1,0 +1,10 @@
+.input-group
+  .input-group-addon.glyphicon.glyphicon-search
+  %input.form-control{:type=>"text",:placeholder=>"Friend name",:"ng-model"=>"query"}
+
+#friend-list.list-group{:style=>"padding-top:38px;"}
+  %a.list-group-item.clearfix{:"ng-repeat"=>"friend in friends | filter:query",:"ng-click"=>"showMessageView(friend)"}
+    %img.img-circle.pull-left{:src=>"//graph.facebook.com/{{friend.uid}}/picture?width=50&height=50",:style=>"margin-right:15px;width:50px;height:50px;"}
+    %h4.list-group-item-heading{:style=>"margin-top:15px"}
+      {{friend.name}}
+      %span.glyphicon.glyphicon-chevron-right.pull-right{:style=>"color:#aaa"}

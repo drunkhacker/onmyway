@@ -1,0 +1,65 @@
+#myCarousel.carousel.slide
+  / wrapper for slides
+  .carousel-inner
+    .item.active
+      %img.img-responsive{:src=>"http://placehold.it/1500x800/dddddd&text=+"}
+      .carousel-caption
+        %h3 Say you are on your way
+        %p Tap and let your friend know
+
+    .item
+      %img.img-responsive{:src=>"http://placehold.it/1500x800/2e9afe&text=+"}
+      .carousel-caption
+        %h3 See your friends intimacy
+        %p Find who are the best friends
+
+    .item
+      %img.img-responsive{:src=>"http://placehold.it/1500x800/faac58&text=+"}
+      .carousel-caption
+        %h3 Map your memories
+        %p See you and your friends activites
+
+  / Controls
+  %a.left.carousel-control{:href=>"#myCarousel", :"data-slide"=>"prev"}
+    %span.icon-prev
+  %a.right.carousel-control{:href=>"#myCarousel", :"data-slide"=>"next"}
+    %span.icon-next
+
+.jumbotron{:style=>"margin-bottom:0"}
+  .container{:style=>"margin-top:-20px"}
+    %h1 On my way
+    %p
+      %small 
+        %span.glyphicon.glyphicon-comment
+      Say you will be there soon to your friends
+    %p{:style=>"text-align:center; margin-top:15px;"}
+      %a#facebook-login.btn.btn-lg.btn-primary{:type=>"button", :href => "/auth/facebook"} 
+        Start with Facebook 
+        %small
+          %span.glyphicon.glyphicon-thumbs-up
+
+:coffee
+  $('#myCarousel').carousel()
+  $("#facebook-login").click () ->
+    alert "hi"
+    isMobile = false
+    try
+        isMobile = "standalone" of navigator and navigator.standalone
+    catch e
+
+    alert isMobile
+
+    if isMobile
+      redirectPage = "http://onmyway.dev/api/auth/facebook/callback"
+      appId = "408261245950555"
+      permissionUrl = "https://m.facebook.com/dialog/oauth?client_id=" + appId + "&response_type=code&redirect_uri="+redirectPage+"&scope=read_stream"
+      window.location = permissionUrl
+      return
+    else
+      FB.login (response) ->
+        #just send token to callback method
+        console.dir response
+        param = $.param signed_request: response.authResponse.signedRequest
+        $.getJSON "/api/auth/facebook/callback?\#{param}", (user) ->
+          window.location = "/#/meetings"
+      , scope:"read_stream"

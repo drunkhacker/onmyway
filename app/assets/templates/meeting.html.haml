@@ -1,0 +1,24 @@
+.panel.panel-default
+  .panel-heading{:"ng-switch"=>"meeting.status"}
+    %span{:"ng-switch-when"=>"0"} 
+      %strong {{meeting.initiator.name}}
+      is on {{ (sex == "female") && "her" || "his" }} way.
+    %span{:"ng-switch-when"=>"1"}
+      %strong {{meeting.initiator.name}}
+      was with you.
+
+  .panel-body
+    %div.clearfix
+      %img.img-circle.pull-left{:src=>"//graph.facebook.com/{{meeting.initiator.facebook_id}}/picture?width=75&height=75", :style=>"width:75px;height:75px;margin-right:15px"}
+      .pull-left {{meeting.message}}
+    %small.pull-right{:style=>"margin-top:-10px;"} {{meeting.created_at | date: "yyyy.MM.dd h:mm a"}}
+
+.well.well-small{:"ng-switch"=>"meeting.status"}
+  %div{:"ng-switch-when"=>"0"}
+    %h4 Is this friend with you?
+    %button.btn.btn-primary.btn-medium.btn-block{:type=>"button", :"ng-click"=>"check()"} Yes, {{ (sex == "female") && "she" || "he" }} is.
+    %a.btn.btn-danger.btn-medium.btn-block{:href=>"#/meetings",:type=>"button"} No, not yet..
+
+  %div{:"ng-switch-when"=>"1"}
+    %h5 You were together at {{meeting.updated_at | date: "yyyy.MM.dd"}}
+    <google-map markers="positionMarker" center="meetingPosition" zoom="13" style="display:block; height:200px"></google-map>

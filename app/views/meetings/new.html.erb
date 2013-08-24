@@ -18,7 +18,7 @@ var tmpl_friend_item = _.template('<li><a href="#" onclick="send_message(\'{{id}
     FB.ui({
       method: 'feed',
       link: "http://onmyway.dev/" + salt,
-      picture: 'http://onmyway.dev/assets/friends.png',
+      picture: 'http://onmyway.dev<%=image_path("friend.png")%>',
       name: "I'm on my way",
       description: "I'm now going to " + name + ". See you soon", 
       to: fbid

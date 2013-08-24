@@ -14,6 +14,23 @@ class Meeting < ActiveRecord::Base
     self.update_attribute(:status, STATUS_DISCARD)
   end
 
+  def self.ranks(user)
+    self.joins("JOIN users ON meetings.sender_id = users.facebook_id")
+    .where("receiver_id = ?", user.facebook_id)
+    .select("COUNT(*) AS count_all,
+             meetings.sender_id AS sender_id,
+             users.name AS name, 
+             MAX(meetings.updated_at) AS last_seen")
+    .group("sender_id").order("count_all DESC").map do |r|
+      {
+       sender_id: r.sender_id,
+       name: r.name,
+       count: r.count_all,
+       last_seen: DateTime.parse(r.last_seen)
+      }
+    end
+  end
+
   def self.find_by_salt(salt)
     self.where(:salt => salt).first
   end

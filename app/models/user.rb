@@ -17,11 +17,11 @@ class User < ActiveRecord::Base
   end
 
   def pending_meetings
-    self.invitations.where(:status => Meeting::STATUS_PENDING)
+    self.invitations.where(:status => Meeting::STATUS_PENDING).order("updated_at DESC")
   end
 
   def confirmed_meetings
-    self.invitations.where(:status => Meeting::STATUS_CONFIRM)
+    self.invitations.where(:status => Meeting::STATUS_CONFIRM).order("updated_at DESC")
   end
 
   def invite(invitee_id, options)

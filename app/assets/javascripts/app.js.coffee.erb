@@ -1,0 +1,47 @@
+window.App = angular.module('onmyway', ['ngResource', 'google-maps'])
+
+App.config ['$routeProvider', '$locationProvider', '$httpProvider', ($routeProvider, $locationProvider, $httpProvider) ->
+  $routeProvider
+    .when '/',
+      redirectTo: '/meetings'
+    .when '/login',
+      templateUrl: "<%= asset_path 'login.html'%>"
+      controller: 'MainCtrl'
+    .when '/meetings',
+      templateUrl: "<%= asset_path 'meetings.html'%>"
+      controller: 'MeetingListCtrl'
+    .when '/meetings/new',
+      templateUrl: "<%= asset_path 'new-meeting.html'%>"
+      controller: 'NewMeetingCtrl'
+    .when '/leaderboard',
+      templateUrl: "<%= asset_path 'leaderboard.html'%>"
+      controller: 'LeaderBoardCtrl'
+    .when '/history',
+      templateUrl: "<%= asset_path 'history.html'%>"
+      controller: 'MeetingListCtrl'
+    .when '/map',
+      templateUrl: "<%= asset_path 'map.html'%>"
+      controller: 'MeetingsMapCtrl'
+    .when '/:salt',
+      templateUrl: "<%= asset_path 'meeting.html'%>"
+      controller: 'MeetingShowCtrl'
+    .otherwise
+      redirectTo: '/meetings'
+
+  #for auth filter
+  interceptor = ['$location', '$q', ($location, $q) ->
+    success = (response) ->
+      response
+    error = (response) ->
+      if response.status == 401
+        $location.path '/login'
+        $q.reject response
+      else
+        $q.reject response
+
+    (promise) ->
+      promise.then success, error
+  ]
+  $httpProvider.responseInterceptors.push interceptor
+
+]

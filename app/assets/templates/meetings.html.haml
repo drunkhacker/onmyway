@@ -1,0 +1,22 @@
+.panel.panel-default
+  / Default panel contents
+  .panel-heading
+    Friends who want to meet you
+  / List group
+  #meeting-list.list-group
+    %a.list-group-item{:href=>"#/{{meeting.salt}}", :"ng-repeat"=>"meeting in meetings"}
+      %img.img-circle.pull-left.initiator-photo{:src=>"//graph.facebook.com/{{meeting.initiator.facebook_id}}/picture?width=70&height=70"}
+      %h4.list-group-item-heading {{meeting.initiator.name}}
+      %p.list-group-item-text.meeting-list-item-msg {{meeting.message}}
+      %p.list-group-item-text.text-right
+        %small.text-muted {{ meeting.created_at | date: "yyyy.MM.dd h:mm a"}}
+
+  .panel-body{:"ng-hide"=>"meetings.length > 0"}
+    No friends are on their way to you.
+
+%p{:style=>"text-align:center; margin-top:15px;"}
+  %a.btn.btn-default.btn-primary.container{:href=>"#/meetings/new"}
+    %span.glyphicon.glyphicon-bullhorn
+    Say to your friend
+</p>
+

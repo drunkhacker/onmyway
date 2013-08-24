@@ -5,3 +5,13 @@
 .no-item {
   color: #aaa;
 }
+
+#meeting-list {
+  .initiator-photo{
+    margin-right:15px;
+  }
+  .meeting-list-item-msg {
+    height: 36px;
+    overflow:hidden;
+  }
+}

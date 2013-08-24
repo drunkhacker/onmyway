@@ -24,8 +24,16 @@ class MeetingsController < ApplicationController
   def show
     #permission check
     @meeting = Meeting.find_by_salt(params[:salt])
-    logger.debug "receiver = #{@meeting.receiver_id.class}, user = #{session[:user].facebook_id.class}, #{@meeting.receiver_id != session[:user].facebook_id}"
-    redirect_to root_path if @meeting.receiver_id != session[:user].facebook_id
+    #logger.debug "receiver = #{@meeting.receiver_id.class}, user = #{session[:user].facebook_id.class}, #{@meeting.receiver_id != session[:user].facebook_id}"
+    if @meeting
+      if false #@meeting.receiver_id != session[:user].facebook_id
+        render :json => {error: "forbidden"}, :status => :forbidden
+      else
+        render :json => @meeting.to_json(:include => :initiator)
+      end
+    else
+      render :json => {error: "no meeting"}, :status => :not_found
+    end
   end
 
   def confirm
@@ -41,5 +49,11 @@ class MeetingsController < ApplicationController
 
   def discard
 
+  end
+
+  def ranks
+    json = Meeting.ranks(session[:user]).to_json
+    #logger.debug "json = #{json.to_s}"
+    render :json => json
   end
 end

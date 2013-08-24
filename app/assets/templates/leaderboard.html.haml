@@ -1,0 +1,7 @@
+%ul#leaderboard.list-group
+  %li.list-group-item{:"ng-repeat"=>"rank in ranks"}
+    %span.badge.pull-right{:style=>"margin-top:13px"} {{rank.count}}
+    %div
+      %img.img-circle.pull-left{:src=>"//graph.facebook.com/{{rank.sender_id}}/picture?width=50&height=50", :style=>"margin-right:15px; width:50px; height:50px;"}
+      %h4.list-group-item-heading {{rank.name}}
+      %p.list-group-item-text.text-muted Last meetup at {{rank.last_seen | date:"yyyy.MM.dd"}}
